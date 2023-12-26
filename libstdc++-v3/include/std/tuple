@@ -50,6 +50,7 @@
 #define __glibcxx_want_apply
 #define __glibcxx_want_make_from_tuple
 #define __glibcxx_want_ranges_zip
+#define __glibcxx_want_tuple_like
 #include <bits/version.h>
 
 namespace std _GLIBCXX_VISIBILITY(default)
@@ -63,6 +64,23 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   template<typename... _Elements>
     class tuple;
+
+#ifdef __cpp_lib_tuple_like // C++ >= 23
+  template<typename>
+    inline constexpr bool __enable_tuple_like = false;
+
+  template<typename _T1, typename _T2>
+    inline constexpr bool __enable_tuple_like<pair<_T1, _T2>> = true;
+
+  template<typename... _Elements>
+    inline constexpr bool __enable_tuple_like<tuple<_Elements...>> = true;
+
+  template<typename _Tp>
+    concept __tuple_like = __enable_tuple_like<remove_cvref_t<_Tp>>;
+
+  template<typename _Tp>
+    concept __pair_like = __tuple_like<_Tp> && tuple_size_v<remove_cvref_t<_Tp>> == 2;
+#endif 
 
   template<typename _Tp>
     struct __is_empty_non_tuple : is_empty<_Tp> { };
