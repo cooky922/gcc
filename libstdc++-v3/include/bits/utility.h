@@ -266,6 +266,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #endif
 #endif
 
+  template<size_t _Np, typename... _Types>
+    using _Nth_type_t = typename _Nth_type<_Np, _Types...>::type;
+
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace
 
